@@ -1,0 +1,554 @@
+ 
+ body {
+        padding-top: 0px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+body{
+  background-color: rgb(203, 219, 223);
+  font-family: 'Arial';
+  color: rgb(31, 65, 84);
+}
+
+h1{
+    padding-top: 15px;
+    padding-left: 15%;
+    font-size: 42px;
+    color: rgb(248, 251, 255);
+}
+.col,
+   [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+h2{
+    color: white;
+    margin-top: 0px;
+    margin-right: 3px;
+}
+
+h3{
+	float: left;
+	font-size: 20px;
+	display: inline-block;
+}
+
+h4{
+    font-size: 25px;
+}
+
+h5 b{
+	font-size: 23px;
+	text-align: center;
+}
+
+h6{
+	line-height: 30px;
+	font-family: 'Arial';
+	font-size: 20px;
+	text-align: center;
+	padding-top: 15px;
+	color: rgb(17, 24, 31);
+}
+
+select div{
+    display: inline;
+}
+
+.selectedBand{
+    fill: rgb(70, 249, 255);
+    }
+
+select:hover{
+    background-color: rgb(70, 191, 148);
+}
+
+.line{
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.area {
+  fill: lightsteelblue;
+}
+
+.selection{
+  fill: #ADD8E6;
+  stroke: #ADD8E6;
+  fill-opacity: 0.3;
+  stroke-opacity: 0.7;
+  stroke-width: 2;
+  stroke-dasharray: 5, 5;
+}
+.line{
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.grid line{
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+  border-style: 2px dotted red;
+}
+
+.grid path{
+  stroke-width: 0;
+}
+
+/* classes */
+
+div.heading{
+    background-color: rgb(40, 44, 50);
+    height: 90px;
+    top: 0;
+}
+
+div.heading img{
+    height: 65px;
+    width: auto;
+    padding-left: 50px;
+    top: 0;
+    padding-bottom: 15px;
+    display: inline-block;
+}
+
+div.heading h1{
+    top: 0;
+    padding-bottom: 25px;
+    display: inline-block;
+}
+
+div.topLeftColumn{
+    font-size: 18px;
+	display: inline-block;
+    float: left;
+    text-align: center;
+    padding-top: 36px;
+    padding-bottom: 35px;
+    margin-top: 25px;
+    margin-left: 1%;
+    width: 35%;
+    height: 100px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 17px;
+    box-shadow: 0px 0px 15px 3px rgb(178, 194, 197);
+}
+
+div.topMiddleColumn{
+	float: right;
+	font-size: 18px;
+	display: inline-block;
+    text-align: center;
+    padding-top: 36px;
+	padding-left: 10px;
+	padding-right: 100px;
+    padding-bottom: 35px;
+	margin-left: 10px;
+    margin-top: 25px;
+   
+    height: 100px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 17px;
+    box-shadow: 0px 0px 15px 3px rgb(178, 194, 197);
+}
+
+div.topRightColumn{
+    float: right;
+	display: flex;
+  	align-items: center;
+  	justify-content: center;
+    padding-top: 1px;
+    padding-right: 20px;
+    margin-top: 25px;
+    margin-right: 7%;
+    width: 33%;
+    height: 100px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 17px;
+	text-align: center;
+	vertical-align: middle;
+    box-shadow: 0px 0px 15px 3px rgb(178, 194, 197);
+}
+
+div.bottomColumn{
+    /* padding-left: 20px; */
+   
+    /* margin-left: 1%; */
+    padding-left: 1%;
+    padding-right: 1%;    
+    width: 100%;
+    height: 1000px;
+    background-color: rgb(255, 255, 255);
+    /* border-radius: 17px; */
+    box-shadow: 0px 0px 15px 3px rgb(178, 194, 197);
+}
+
+div.tooltip{
+	border-color: rgb(244, 244, 244);
+    background-color: rgba(244, 244, 244);
+	border-style: solid;
+	border-width: 2px;
+    text-align: center;           
+    padding-top: 7px;
+    padding-bottom: 7px;             
+    padding-left: 12px;
+    padding-right: 12px;
+    z-index:100;    
+    font: 12px sans-serif;    
+	color: rgb(0, 0, 0);       
+}
+div.cnvtooltip{ 
+	border-color: rgb(244, 244, 244);
+    background-color: rgba(244, 244, 244);
+	border-style: solid;
+	border-width: 2px;
+    text-align: center;           
+    padding-top: 7px;
+    padding-bottom: 7px;             
+    padding-left: 12px;
+    padding-right: 12px;
+    z-index:100;    
+    font: 12px sans-serif;    
+	color: rgb(0, 0, 0);    
+}
+.input-group button{
+	background-color: rgb(71, 160, 129);
+	color: rgb(255, 255, 255);
+}
+
+.input-group button:hover{
+	background-color: rgb(70, 191, 148);
+	color: rgb(255, 255, 255);
+}
+
+.correctButton{
+	float: left;
+    display: inline;
+    margin-left: 25px;
+    margin-top: 22px;
+    padding-left: 5px;
+    border-radius: 30px;
+    width: 160px;
+    height: 50px;
+    font-family: 'Arial';
+    font-size: 17px;
+    background-color: rgb(118, 131, 206); 
+    color: rgb(255, 255, 255);
+    border-style: none;
+}
+
+.correctButton:hover{
+	transition-duration: 10;
+    background-color: rgb(145, 157, 224); 
+}
+
+div.ButtonChromosome{
+    margin-top: 25px;
+}
+
+div.fontColor{
+    color: rgb(48, 149, 114);
+    display: inline;
+}
+
+.blueButton{
+    display: inline;
+    margin-left: 10px;
+    margin-top: 22px;
+    padding-left: 5px;
+    border-radius: 30px;
+    width: 160px;
+    height: 50px;
+    font-family: 'Arial';
+    font-size: 17px;
+    background-color: rgb(70, 172, 233); 
+    color: rgb(255, 255, 255);
+    border-style: none;
+}
+
+.blueButton:hover{
+    background-color: rgb(98, 192, 247); 
+}
+
+.zoomInButton{
+    display: inline;
+    margin-left: 10px;
+    margin-top: 22px;
+    padding-top: 3px;
+    padding-left: 7px;
+    border-radius: 30px;
+    width: 50px;
+    height: 50px;
+    font-family: 'Arial';
+    font-size: 17px;
+    background-color: rgb(138, 150, 168); 
+    color: rgb(255, 255, 255);
+    border-style: none; 
+}
+
+.zoomInButton:hover{
+    background-color: rgb(160, 174, 194); 
+}
+
+.zoomOutButton{
+    display: inline;
+    margin-left: 3px;
+    margin-top: 22px;
+    padding-top: 3px;
+    padding-left: 5px;
+    border-radius: 30px;
+    width: 50px;
+    height: 50px;
+    font-family: 'Arial';
+    font-size: 17px;
+    background-color: rgb(149, 160, 175); 
+    color: rgb(255, 255, 255);
+    border-style: none; 
+}
+
+.zoomOutButton:hover{
+    background-color: rgb(160, 174, 194); 
+}
+
+.refreshButton{
+    display: inline;
+    margin-left: 3px;
+    margin-top: 22px;
+    padding-top: 3px;
+    padding-left: 7px;
+    border-radius: 30px;
+    width: 50px;
+    height: 50px;
+    font-family: 'Arial';
+    font-size: 17px;
+    background-color: rgb(149, 160, 175); 
+    color: rgb(255, 255, 255);
+    border-style: none; 
+}
+
+.refreshButton:hover{
+    background-color: rgb(160, 174, 194); 
+}
+
+.modifyButton{
+    margin-left: 20px;
+    margin-bottom: 15px;
+    float: right;
+    background-color: rgb(190, 88, 88);
+    color: rgb(255, 255, 255);
+    height: 50px;
+    width: 125px;
+    border-style: none;
+    font-family: 'Arial';
+    font-size: 16px;
+    border-radius: 30px;
+}
+
+.modifyButton:hover{
+    background-color: rgb(226, 108, 108);
+}
+
+.updateButton{
+	margin-left: 20px;
+    margin-bottom: 15px;
+    float: right;
+    background-color: rgb(88, 107, 194);
+    color: rgb(255, 255, 255);
+    height: 50px;
+    width: 125px;
+    border-style: none;
+    font-family: 'Arial';
+    font-size: 16px;
+    border-radius: 30px;
+}
+
+.updateButton:hover{
+    background-color: rgb(108, 130, 226);
+}
+
+div.modal-content{
+    height: 20%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 17px;
+    box-shadow: 0px 0px 15px 3px rgb(92, 104, 104);
+}
+
+button.close{
+    font-size: 30px;
+}
+
+.chromosomeSelect{
+    display: inline;
+	margin-left: 14px;
+    margin-top: 22px;
+    padding-left: 15px;
+    border-radius: 30px;
+    width: 161px;
+    height: 50px;
+    font-family: 'Arial';
+    font-size: 17px;
+    background-color: rgb(71, 160, 129);
+    color: rgb(255, 255, 255);
+    border-style: none;
+}
+
+.chromosomeSelect:hover{
+	background-color: rgb(70, 191, 148);
+}
+
+/* a:link {
+	float: left;
+	display: inline;
+	margin-left: 20px;
+    margin-top: 20px;
+    font-family: 'Arial';
+    font-size: 14px;
+    color: rgb(0, 0, 0);
+}
+
+a:visited {
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+}
+
+a:hover {
+  text-decoration: underline;
+  color: rgb(119, 119, 184);
+}
+
+a:active {
+  text-decoration: underline;
+  color: rgb(155, 119, 184);
+} */
+
+.inputGo{
+	margin-left: 5px;
+	height: 30px;
+}
+
+span.highlight{
+    margin-right: 3px;
+    margin-top: 20px;
+}
+
+.zoomSlidebar{
+	float: left;
+	display: inline-block;
+	margin-left: 50px;
+	margin-top: 50px;
+	background-color: rgb(238, 238, 238);
+	font-size: 15px;
+    border-radius: 17px;
+    box-shadow: 0px 0px 15px 3px rgb(178, 194, 197);
+	width: 95px;
+
+}
+
+#cnveditor .brush .selection{
+    fill: rgb(70, 191, 148, 0.4)  !important;  
+    stroke: rgb(71, 160, 129)  !important;
+    fill-opacity: .3;
+    shape-rendering: crispEdges;
+}
+
+#triangletooltip{
+	border: rgb(244, 244, 244);
+	border-style: solid;
+	border-width: 2px;
+    background-color: rgba(244, 244, 244, 0.9);
+    text-align: center;           
+    padding-top: 7px;
+    padding-bottom: 7px;             
+    padding-left: 12px;
+    padding-right: 12px;
+    z-index:100;    
+    font: 15px sans-serif;    
+	color: rgb(30, 32, 36); 
+}
+.col-sm-2 col-form-label{
+    width: 130px;
+}
+
+.float-container {
+    border: 3px solid #fff;
+    padding: 20px;
+}
+
+.float-child-1 {
+    width: 10%;
+    float: left;
+    padding: 20px;
+    border: 2px solid black;
+} 
+
+.float-child-2 {
+    width: 90%;
+    float: left;
+    padding: 20px;
+    border: 2px solid black;
+} 
+
+.chrlabels {
+    background-color: AliceBlue;
+	fill: #f00;
+}
+
+.gistic {
+	opacity: 0.8;
+	stroke: #000000;
+}
+
+.somatic {
+	fill: rgb(46, 51, 91);
+}
+
+.germline{
+	fill: rgb(51, 130, 76);
+}
+
+.rna {
+	fill: rgb(43, 49, 80);
+}
+
+.tumor {
+	/* stroke-opacity: 0.5; */
+  stroke: purple;
+}
+
+
+ #context-menu {
+        position: fixed;
+        z-index: 10000;
+        width: 350px;
+        background: #eee;
+        border-radius: 5px;
+        transform: scale(0);
+        transform-origin: top left;
+      }
+
+      #context-menu.visible {
+        transform: scale(1);
+        transition: transform 200ms ease-in-out;
+      }
+
+      #context-menu .item {
+        padding: 8px 10px;
+        font-size: 15px;
+        color: #000;
+        cursor: pointer;
+        border-radius: inherit;
+      }
+
+      #context-menu .item:hover {
+        background: #fff;
+      }
+	  .wrapper {
+	  margin-top:10px;
+ display: grid;
+  grid-template-columns: 2fr 3fr;
+ 
+   
+   
+  align-items: start;
+}

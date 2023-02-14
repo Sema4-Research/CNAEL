@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+
+
+
+<style>
+  /* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.loader {
+  border: none;
+  position: relative;
+  left: 50%;
+  width: 1%;
+  height: 5px;
+  background-color: gray;    
+  -webkit-animation: scale 1s linear infinite;
+  animation: scale 1s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@-webkit-keyframes scale {
+    0% {-webkit-transform: scaleX(1); }
+    100% {-webkit-transform: scaleX(100); }
+  }
+
+  @keyframes scale {
+    0% {transform: scaleX(1); }
+    100% {transform: scaleX(100); }
+  }
+
+  
+
+  body {
+    background-color:lightgrey;
+  }
+    #menu-move-grp > button {
+        margin: 5px;
+    }
+    button {    
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    .cnv-operator > div.col > * {
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+    
+    #bottom-nav {
+      position: fixed;
+      left: 35%;
+      top: 80%;
+    }
+
+    #bottom-nav > .btn {  
+      margin: 0;    
+      outline: none;
+      border-radius: 25px;
+    }
+
+    #bottom-nav > .btn:focus {
+      background-color: whitesmoke;
+    }
+
+    #bottom-nav > .btn:active {
+      background-color: gray;
+    }
+
+    .nav-tabs .nav-link,
+    .nav-tabs .nav-link:hover {
+
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin-left: 10px;
+        height: 100%;
+        border-left-color: gray;
+        border-top-color: gray;
+        border-right-color: gray;
+        /* border-bottom-color: #5a5b5e; */
+        color: gray;
+        background: none;
+    }
+
+    .nav-tabs .nav-link.active {
+        border-top: 8px solid gray;
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        border-bottom: 1px solid lightgray;
+        position: relative;
+        background: none;
+        color: black;
+        font: bold;
+        top: 1px;
+    }
+
+  #summary-table:nth-child(1) tr th:nth-child(n + 6),
+  #summary-table:nth-child(1) tr td:nth-child(n + 6){
+    text-align: right;
+    padding-right: 20px;
+  }
+
+  #summary-table tr:hover,
+  #cs-segments-table tr:hover {
+  background-color: whitesmoke;
+}
+
+</style>
+
+
+<body>
+
+ <div id="context-menu">
+      <div class="item" onclick="saveAsPNG();return false;"> Save the Screenshot</div>
+      <div class="item">Help</div>    
+ </div>
+
+ <!-- CNV Setting -->
+ <div class="modal fade" id="cnvSettingModal-expand" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cnvSettingStaticBackdropLabel-expand" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="margin-left: -100px; width: 900px;">
+      <div class="modal-header" style="padding:35px 50px;">
+        <h5 style="text-align: center;" class="modal-title" id="cnvSettingStaticBackdropLabel-expand"></h5>
+        <button type="button" class="btn-close" data-bs-target="#cnvSettingModal" data-bs-toggle="modal"  data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="font-size: 17px; padding-left: 50px; padding-top: 30px; width: 840px;">
+        <div class="container-fluid">
+          <form role="form" id="cnv-setting-form-expand">
+            <div class="form-check form-switch" style="border-bottom: 1px solid lightgray; padding: 15px;">
+              <label class="col-sm-2 form-check-label" style="width:238px;">Visible </label>
+              <input class="form-check-input" style="position: absolute; right: 10%;" type="checkbox" role="switch" id="container-visible">
+            </div>
+            <div class="form-check form-switch" style="border-bottom: 1px solid lightgray; padding: 15px;">
+              <label class="col-sm-2 form-check-label" style="width:238px;">Gap background</label>
+              <input class="form-check-input" style="position: absolute; right: 10%;" type="checkbox" role="switch" id="container-gap">
+            </div>
+            <div class="form-check form-switch" style="border-bottom: 1px solid lightgray; padding: 15px;">
+              <label class="col-sm-2 form-check-label" style="width:238px;">Chromosome split line </label>
+              <input class="form-check-input" style="position: absolute; right: 10%;" type="checkbox" role="switch" id="container-split-line">
+            </div>
+          <!-- <div class="form-group row"  style="margin-left: 2px; margin-right: 2px; border-bottom: 1px solid lightgray; padding: 15px;">
+            <label class="col-sm-2 form-check-label" style="width:238px;">Order </label>
+            <select class="form-select form-select-sm" id="container-order-select" style="position: absolute; right: 10%; width:100px" aria-label="Default select example">
+            </select>
+          </div> -->
+          <div class="form-group row" style="margin-left: 2px; margin-right: 2px;  border-bottom: 1px solid lightgray; padding: 15px;" >
+            <label class="col-sm-2 form-check-label" style="width:238px;">Interval </label>
+            <input type="number"   placeholder="0" id="expand-grids" style="position: absolute; right: 10%; width: 100px;"
+                value="0" required />
+          </div>
+          <div class="form-group row" style="margin-left: 2px; margin-right: 2px; border-bottom: 1px solid lightgray; padding: 15px;" >
+            <label class="col-sm-2 form-check-label" style="width:238px;">Coordinates </label>
+            <input type="number"   placeholder="0" id="expand-ticks" style="position: absolute; right: 10%; width: 100px;"
+            value="0" required />
+          </div>
+          <div class="form-group row" style="margin-left: 2px; margin-right: 2px; border-bottom: 1px solid lightgray; padding: 15px;" >
+            <label class="col-sm-2 form-check-label" style="width:238px;">Height </label>
+            <input type="number"   placeholder="0" id="expand-height" style="position: absolute; right: 10%; width: 100px;"
+            value="0" required />
+          </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer" style="margin-right: 10%;" >
+        <button type="button" class="btn btn-secondary" data-bs-target="#cnvSettingModal" data-bs-toggle="modal" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button"  form="cnv-setting-form-expand" id="btnCNVSetting-expand" data-bs-target="#cnvSettingModal" data-bs-toggle="modal"  class="btn btn-primary" data-dismiss="modal"> Confirm </button> -->
+        <button type="button"  id="btnCNVSetting-expand" class="btn btn-primary" data-dismiss="modal"> Confirm </button>
+      </div>
+    </div>
+  </div>
+  </div>  
+
+  <div class="modal fade" id="cnvSettingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cnvSettingStaticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="margin-left: -100px; width: 900px;">
+        <div class="modal-header" style="padding:35px 50px;">
+          <h5 style="text-align: center;" class="modal-title" id="cnvSettingStaticBackdropLabel">Setting</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="font-size: 17px; padding-left: 50px; padding-top: 30px; width: 840px;">          
+            <div class="form" id = "cnv-setting-form">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button"  form="cnv-setting-form" id="btnCNVSetting" class="btn btn-primary" data-dismiss="modal"> Confirm </button>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  <!-- CNV editor -->
+  <div class="modal fade" id="cnvEditorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cnvEditorStaticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="margin-left: -100px; width: 900px;">
+        <div class="modal-header" style="padding:35px 50px;">
+          <h5 style="text-align: center;" class="modal-title" id="cnvEditorStaticBackdropLabel">Edit CNV Segment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="font-size: 17px; padding-left: 50px; padding-top: 30px; width: 840px;">
+          <form role="form" id="segForm">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnEditCNV" class="btn btn-danger modifyButton" data-dismiss="modal"> Modify </button>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  <!-- CNV Curate history -->
+  <div class="modal fade" id="cnvHistoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cnvHistoryStaticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="margin-left: -100px; width: 900px;">
+        <div class="modal-header" style="padding:35px 50px;">
+          <h5 style="text-align: center;" class="modal-title" id="cnvHistoryStaticBackdropLabel">View edit history</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" style="font-size: 17px; padding-left: 50px; padding-top: 30px; width: 840px;">
+          <div id="cnvHistoryTbl">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+    <!-- CNV merge modal -->
+    <div class="modal fade" id="cnvMergeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cnvMergeStaticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="margin-left: -100px; width: 900px;">
+          <div class="modal-header" style="padding:35px 50px;">
+            <h5 style="text-align: center;" class="modal-title" id="cnvMergeStaticBackdropLabel">Merge segments</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="font-size: 17px; padding-left: 50px; padding-top: 30px; width: 840px;">
+            <div id="cnvMergeSegs">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="btnCNVMergeConfirm" class="btn btn-primary" data-dismiss="modal"> Confirm </button>
+          </div>  
+        </div>
+      </div>
+    </div>  
+
+  <!-- CNV Correction -->
+  <div class="modal fade" id="cnvCorrectModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cnvCorrectStaticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+          <h5 class="modal-title" id="cnvCorrectStaticBackdropLabel">Correct CNV Segment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"
+          style="font-weight: bold;  font-size: 17px; padding-left: 50px; padding-top: 30px; width: 670px;">
+          <form id="cnv-correct-form" action="#">
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" style="width:238px;">Purity: </label>
+              <input type="number" class="col-sm-2 col-form-label"  placeholder="1-100" id="purity" style="width: 138px; margin:5px 0px 5px 0px;"
+                value="100" required />
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" style="width:238px;">Ploidy: </label>
+              <select class="col-sm-2 col-form-label" style="width: 138px; margin:5px 0px 5px 0px;" id="ploidy" required>
+                <option value="1"> 1</option>
+                <option value="2" selected> 2</option>
+                <option value="3"> 3</option>
+                <option value="4"> 4</option>
+                <option value="5"> 5</option>
+                <option value="7"> 7</option>
+                <option value="8"> 8</option>
+              </select>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" style="width:238px;">Modal chr number: </label>
+              <select class="col-sm-2 col-form-label" style="width: 138px; margin:5px 0px 5px 0px;" id="modalchr" required>
+                <option value="1"> 1</option>
+                <option value="2" selected> 2</option>
+                <option value="3"> 3</option>
+                <option value="4"> 4</option>
+                <option value="5"> 5</option>
+                <option value="6"> 6</option>
+                <option value="7"> 7</option>
+                <option value="8"> 8</option>
+              </select>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" style="width:238px;">CnvAdjustment: </label>
+              <input type="number" step="any" class="col-sm-2 col-form-label" id="cnvAdjustment" placeholder="0" value="0"
+                style="width: 138px; margin:5px 0px 5px 0px;" required>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" style="width:238px;">Loss threshold: </label>
+              <input type="number" step="any" class="col-sm-2 col-form-label" id="lossThreshold" placeholder="1.8"
+                style="width: 138px; margin:5px 0px 5px 0px;" value="1.8" required>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" style="width:238px;">Gain threshold: </label>
+              <input type="number" step="any" class="col-sm-2 col-form-label" id="gainThreshold" placeholder="2.2"
+                style="width: 138px; margin:5px 0px 5px 0px;" value="2.2" required>
+            </div>
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label" style="width:238px;">Amplification threshold: </label>
+              <input type="number" step="any" class="col-sm-2 col-form-label" id="amplificationThreshold" placeholder="6" 
+                style="width: 138px; margin:5px 0px 5px 0px;" value="6" required>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+          <!-- <button type="button" class="btn btn-primary">Update</button> -->
+          <button type="submit" form="cnv-correct-form" id="btnUpdateCNV" class="btn btn-primary" data-dismiss="modal"> Update </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+<div class="container-fluid" >
+  <div class="row">
+    <div class="col-4 brand" style="padding-left: 5%;  display: flex; flex-direction: row;">
+      <img src="https://cdn1.sema4.com/wp-content/uploads/20211118124411/logo_sema4-1.svg" width="140px" height="35.42px" alt="Home">
+      <h3 style="margin-top:10px; color:gray;">CNV Explorer</h3>
+    </div>
+    <div class="col-8">
+    </div>
+  </div>
+
+  <!--<h4 style="top-margin:0px;">Copy Number of Variants</h4>-->
+  <ul class="nav nav-tabs" id="maintab" role="tablist" style="border-bottom: 1px solid #5a5b5e;">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general"
+            type="button" role="tab" aria-controls="general" aria-selected="true">CNV viewer</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="variant-triage-tab" data-bs-toggle="tab"
+            data-bs-target="#variant-triage" type="button" role="tab" aria-controls="variant-triage"
+            aria-selected="fa">Segment Table</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="variant-review-tab" data-bs-toggle="tab"
+            data-bs-target="#variant-review" type="button" role="tab" aria-controls="contact"
+            aria-selected="false">Report</button>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+      <!-- style="position: fixed; background-color: lightgrey; top: 100px; margin-bottom: 30px;"  -->
+      <div id="cnv-viewer-header" class="container-fluid" style="background-color: lightgrey; margin-bottom: 0px; position: sticky; top: 0px;">
+        <div class="row" style="padding-left: 20px;  padding-top: 5px; margin-bottom: 5px;">
+            <div class="col" style="display: flex; flex-direction: row;">
+              <button type="button" data-toggle="tooltip" data-placement="bottom" title="To whole genome" class="btn btn-light" id ='move-home'><i class="bi bi-house"></i></button>
+              <button type="button" data-toggle="tooltip" data-placement="bottom" title="Fit to original page" class="btn btn-light" id ='refresh-page'><i class="bi bi-arrows-fullscreen"></i></button>
+              <button type="button" class="btn btn-light" id ='save-screenshot'><i class="bi bi-download"></i></button>
+              <button type="button" class="btn btn-light" id ='layout-config'><i class="bi bi-gear"></i></button>
+              <select class="form-select" id="chromsome-select" onchange="changeChromosome(this)" style="border-radius: 0; border: none; border-right: 1px dashed gray; width: fit-content;">
+                <option value="all">all</option>
+                <option value="1">chr1</option>
+                <option value="2">chr2</option>
+                <option value="3">chr3</option>
+                <option value="4">chr4</option>
+                <option value="5">chr5</option>
+                <option value="6">chr6</option>
+                <option value="7">chr7</option>
+                <option value="8">chr8</option>
+                <option value="9">chr9</option>
+                <option value="10">chr10</option>
+                <option value="11">chr11</option>
+                <option value="12">chr12</option>
+                <option value="13">chr13</option>
+                <option value="14">chr14</option>
+                <option value="15">chr15</option>
+                <option value="16">chr16</option>
+                <option value="17">chr17</option>
+                <option value="18">chr18</option>
+                <option value="19">chr19</option>
+                <option value="20">chr20</option>
+                <option value="21">chr21</option>
+                <option value="22">chr22</option>
+                <option value="X">chrX</option>
+                <option value="Y">chrY</option>
+              </select>
+              <input type="text" placeholder="chr1:1-100000" id="chromRegion" style = "width: 260px; border: none; border-right: 1px dashed gray; "> 
+              <input type="text" readonly="readonly" value="" id="chrom-extent" style = "font-size: small; color: gray; width: 100px; border: none; border-right: 1px dashed gray; "> 
+              <button style="margin-left: 0; border-radius:0" type="button" class="btn btn-light" id="goButton"><i class="bi-search"></i></button>
+              <select class="btn" onchange="changeGistic(this)" id = "gisticid" aria-label = "gistic" style = "width: 90px; background-color: gray; color: #fff;" >		
+                <option value="ARMS" disabled>ARMS</option>
+                <option value="BLCA">BLCA</option>
+                <option value="BRCA">BRCA</option>
+                <option value="BRCANOS" disabled>BRCANOS</option>
+                <option value="CCRCC" disabled>CCRCC</option>
+                <option value="CHOL">CHOL</option>
+                <option value="CHOS" disabled>CHOS</option>
+                <option value="CHS" disabled>CHS</option>
+                <option value="COAD">COAD</option>
+                <option value="COADREAD">COADREAD</option>
+                <option value="CSCC" disabled>CSCC</option>
+                <option value="CUPT" disabled>CUPT</option>
+                <option value="ES" disabled>ES</option>
+                <option value="ESCA">ESCA</option>
+                <option value="ESST" disabled>ESST</option>
+                <option value="ET" disabled>ET</option>
+                <option value="GBM">GBM</option>
+                <option value="GIST" disabled>GIST</option>
+                <option value="HGNES" disabled>HGNES</option>
+                <option value="HGSOC" disabled>HGSOC</option>
+                <option value="HNSC">HNSC</option>
+                <option value="IDC" disabled>IDC</option>
+                <option value="ILC" disabled>ILC</option>
+                <option value="LMS" disabled>LMS</option>
+                <option value="LUAD">LUAD</option>
+                <option value="LUAS" disabled>LUAS</option>
+                <option value="LUNE" disabled>LUNE</option>
+                <option value="LUSC">LUSC</option>
+                <option value="MACR" disabled>MACR</option>
+                <option value="MBOV" disabled>MBOV</option>
+                <option value="MEL" disabled>MEL</option>
+                <option value="MGCT" disabled>MGCT</option>
+                <option value="NBL" disabled>NBL</option>
+                <option value="NIKE" disabled>NIKE</option>
+                <option value="NSCLC" disabled>NSCLC</option>
+                <option value="Null" disabled>Null</option>
+                <option value="OCSC" disabled>OCSC</option>
+                <option value="OS" disabled>OS</option>
+                <option value="PAAD">PAAD</option>
+                <option value="PCM" disabled>PCM</option>
+                <option value="PRAD">PRAD</option>
+                <option value="RCC" disabled>RCC</option>
+                <option value="READ" >READ</option>
+                <option value="RMS" disabled>RMS</option>
+                <option value="SEM" disabled>SEM</option>
+                <option value="TESTONCO" disabled>TESTONCO</option>
+                <option value="THFO" disabled>THFO</option>
+                <option value="THPA" disabled>THPA</option>
+                <option value="TLL" disabled>TLL</option>
+                <option value="USC" disabled>USC</option>
+                <option value="UTUC" disabled>UTUC</option>
+              </select>
+              <input type="file" id="inputfile">
+              <button class = "btn" style="width: 90px; background-color: gray; color: white;" id = "cnvCorrectButton">Correction</button>
+              <button class = "btn" style="width: 90px; background-color: gray; color: white;" id="cnveditorButton">Edit</button>
+              <button class = "btn" style="width: 90px; background-color: gray; color: white;" id="cnvMergeButton">Merge</button>
+              <button class = "btn" style="width: 90px; background-color: gray; color: white;" id="igvButton">IGV</button>
+              <button class = "btn disabled" style="width: 90px; background-color: gray; color: white;" id="undoButton">Undo</button>
+              <button class = "btn disabled" style="width: 90px; background-color: gray; color: white;" id="redoButton">Redo</button>                
+              <button class = "btn" style="width: 90px; background-color: gray; color: white;" id="resetButton">Reset</button>
+              <!-- <button class = "btn" style="width: 90px; background-color: gray; color: white;" id="saveDbButton">Import</button>
+              <button class = "btn" style="width: 90px; background-color: gray; color: white;" id="historyButton">History</button> -->
+            </div>
+        </div>  
+        <div class="row" >
+          <div id="data-loader-bar" class="loader"  style="display: none;" ></div>
+        </div>
+        <div class="row">
+          <!-- position: fixed; bottom: 100px; margin-left: 35%;  -->
+          <div id="bottom-nav" style="border-radius: 50px; background-color: whitesmoke; width: fit-content; padding: 5px; box-shadow: 0px 0px 18px rgb(201 201 201 / 50%);">
+            <button type="button" class="btn shadow-none disabled" id ='go-back-btn'><i class="bi bi-caret-left-fill"></i></button>
+            <button type="button" class="btn shadow-none disabled" id ='go-forward-btn'><i class="bi bi-caret-right-fill"></i></button>
+            <button type="button" class="btn shadow-none" style="margin-right:0;" id ='zoom-out'><i class="bi bi-dash-circle-fill"></i></button>
+            <input style="width: 200px; height: 100%;" type="range" class="form-range" id="selection-range" min="-28" max="-5">
+            <button type="button" class="btn shadow-none" style="margin-left:0;" id ='zoom-in'><i class="bi bi-plus-circle-fill"></i></button>
+            <span id="operator-mode" style="white-space:nowrap; display: none; vertical-align: bottom;">
+              <input type="radio" class="btn-check shadow-none" name="operate-mode" id="operate-mode-drag" autocomplete="off" onchange="switchMode('drag')" checked>
+              <label id="drag-label" class="btn btn-outline-secondary shadow-none" for="operate-mode-drag"><i class="bi bi-arrows-move"></i></label>
+              <input type="radio" class="btn-check" name="operate-mode" id="operate-mode-edit" autocomplete="off" onchange="switchMode('edit')">
+              <label id="edit-label" class="btn btn-outline-secondary shadow-none" for="operate-mode-edit"><i class="bi bi-pencil-fill"></i></label>
+      
+              <button type="button" id="align-line-switch" class="btn btn-outline-secondary shadow-none" data-bs-toggle="button" autocomplete="off"><i class="bi bi-input-cursor"></i></button>
+            </span>
+            <button id="bottom-nav-ext" type="button " class="btn shadow-none" style="margin-left:0; padding: 0;" onclick="extendBottomNav()"><i id="ext-icon" class="bi bi-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <div id="svg-container-bg" class = "bottomColumn" style="padding-left: 2%; padding-right: 2%;">
+        <h6 id="viewerTitle">Tumor() vs. Normal()</h6>  
+        <div id = "svgcontainer"></div>
+      </div>
+    </div>
+
+    <!-- Segment Table -->
+    <div class="tab-pane" id="variant-triage" role="tabpanel" aria-labelledby="variant-triage-tab">
+        <div class="container-fluid" style="padding-top: 20px; background: white;">
+          <table id="dtCnvSegment" class="display" width="100%">
+              <thead>
+                <tr >
+                  <th></th>
+                  <th></th>  
+                  <th></th> 
+                  <th></th>  
+                  <th></th>  
+                  <th></th> 
+                  <th></th>      
+                  <th></th>  
+                  <th></th>         
+                  <th></th>    
+                  <th></th>         
+                  <th></th>     
+                  <th></th>                       
+                  <th>Segment&nbsp;Location</th>  
+                  <th>Cytoband</th>  
+                  <th>Call&nbsp;Type</th>    
+                  <th>CN</th>  
+                  <th>AI</th>  
+                  <th>KB</th>  
+                  <th>Genes</th>
+                  <th>Oncogenes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                  <th>Tumor&nbsp;Suppressor&nbsp;Gene&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>     
+                  <th>CAV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>        
+                  <th>Curator&nbsp;Confirm</th>   
+                  <th>Curation&nbsp;Date&nbsp;UTC</th>    
+                  <th>Notes</th>
+                  <th>Reviewer</th>   
+                  <th>Review&nbsp;Date&nbsp;UTC</th> 
+                  <th>Clin&nbsp;Sig&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+              </tr>
+              </thead>
+          </table>
+      </div>
+    </div>
+
+    <!-- Summary Table -->
+    <div class="tab-pane" id="variant-review" role="tabpanel" aria-labelledby="variant-review-tab" style="background-color: white; min-height: 100vh;">
+      <div class="container" style="width: 50%; padding:20px;">
+        <div class="row">
+          <div style="display: flex;">
+            <button type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" onclick="exportReport()">Export report</button>
+          </div>          
+        </div>
+        <div class="row">
+          <h3>Summary</h3>
+          <textarea name="" id="summary-txt" cols="30" rows="5"></textarea>
+        </div>        
+        <div class="row">
+          <h3>Clinical Significant segments</h3>
+          <table id="cs-segments-table" class="table">
+            <thead>
+              <tr>
+                <th>Segment Location</th>
+                <th>Cytoband</th>
+                <th>Call Type</th>
+                <th>CN</th>
+                <th>AI</th>
+                <th>KB</th>
+                <th>Notes</th>
+                <th>Clin Sign</th>
+              </tr>
+            </thead>            
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <h3>Appendix</h3>
+          <table id="summary-table" class="table">          
+            <thead>
+              <tr>
+                <th>Chromosome</th>
+                <th>StartBand</th>
+                <th>EndBand</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Size (MB)</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody>            
+            </tbody>          
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+<script type="text/javascript" src="js/initButtonEvent.js?v=25"></script>
+<script type="text/javascript" src="js/renderCytoband.js?v=2"></script>
+
+<script>
+$( function() {
+    $( "#bottom-nav" ).draggable();
+} );
+// $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e){
+$("#variant-triage-tab").on('shown.bs.tab', function(e){    
+  console.log('show bs')
+   $($.fn.dataTable.tables(true)).DataTable()
+      .columns.adjust();
+});
+
+
+function whichBand( chr , pos) {
+  let band = chrBands[chr].find((d)=>{return d.bp.start <= pos && d.bp.stop > pos})
+  if (band) {
+    return band.name
+  } else {
+    return ""
+  }
+}
+
+let allelicImbThresh = 1.7
+let combineSize = 5000000
+function aiState(allelicImb) {
+  if (allelicImb == "nan") {
+    return "het"
+  } else if (allelicImb == "NA") {
+    return "het"
+  } else if (Number(allelicImb) >= allelicImbThresh) {
+    return "LOH"
+  }
+  return "het"
+}
+
+function combineSegments(segments, aitype = false) {
+  let mergedSegments = []
+  segments.push({
+      chr: '26',
+      start: 1,
+      end: 2,
+      size: 1,
+      state: 'normal',
+      aiState: 'het',
+      startBand: '',
+      endBand: ''
+    })  
+  let nSegments = segments.length
+  let index = 0
+  while (index < nSegments - 1) {
+    let firstChrom     = segments[index].chr
+    let firstStart     = segments[index].start
+    let firstEnd       = segments[index].end
+    let firstStartBand = segments[index].startBand
+    let firstEndBand   = segments[index].endBand
+    let firstState     = segments[index][aitype?'aiState':'state']
+    let firstSize      = segments[index].size    
+    let nextindex = index + 1
+    for (; nextindex < nSegments; nextindex++) {
+      if (firstChrom == segments[nextindex].chr && firstState == segments[nextindex][aitype?'aiState':'state']) {
+        continue;
+      }
+      let secondChrom     = segments[nextindex-1].chr
+      let secondStart     = segments[nextindex-1].start
+      let secondEnd       = segments[nextindex-1].end
+      let secondStartBand = segments[nextindex-1].startBand
+      let secondEndBand   = segments[nextindex-1].endBand
+      let secondState     = segments[nextindex-1][aitype?'aiState':'state']
+
+      size = secondEnd - firstStart
+      if (firstState != 'normal' && size > combineSize) {
+        mergedSegments.push({
+          chr: firstChrom,
+          start: firstStart,
+          end: secondEnd,
+          size: secondEnd - firstStart,
+          state: firstState,
+          startBand: firstStartBand,
+          endBand: secondEndBand
+        })
+      }
+      break;
+    }
+    index = nextindex;
+  }
+  return mergedSegments;
+}
+
+let igv_bat_url_prefix      = 'http://localhost:60151/load?file='
+function constructSegmentGenomicPositionTx(row) {
+    let seg_genomic_pos_tx = row.seg_chrom_nm + ':' + 
+                             row.seg_start_pos_num +  '-' +
+                             row.seg_end_pos_num
+    return seg_genomic_pos_tx
+}
+
+//CNV 
+function constructCNVSegmentGenomicPositionTxIgvLink(row, bam) {
+    let igv_link
+    let seg_genomic_pos_tx = constructSegmentGenomicPositionTx(row)
+
+    igv_link = seg_genomic_pos_tx
+
+    if (seg_genomic_pos_tx) {
+                let url = igv_bat_url_prefix + bam + seg_genomic_pos_tx
+                //console.log("igv_link URL = " + url)
+                //let anchor_start_tag = '<a style="color:blue" href=' +  url + ' target="_blank">'   
+                let anchor_start_tag = '<a style="color:blue" href=' +  url + ' >'   
+                let anchor_end_tag  = '</a>'   
+                igv_link =   anchor_start_tag + seg_genomic_pos_tx + anchor_end_tag
+    }
+    return igv_link
+}
+
+function applyFontColorToTumorCopyNumber(row) {
+    // Fusion data
+    const amplificationFontcolor        = 'green'
+    const lossFontcolor                 = 'red'
+    const defaultFontcolor              = 'black'
+
+    let fontcolor = defaultFontcolor
+    
+    if (row.cnv_call_type_nm 
+        && 
+        (row.cnv_call_type_nm == 'Amplification' 
+        || 
+        row.cnv_call_type_nm == 'Gain')) {
+        
+        fontcolor = amplificationFontcolor
+    }
+    else if (row.cnv_call_type_nm 
+             && 
+            row.cnv_call_type_nm == 'Loss') {
+        fontcolor = lossFontcolor
+    }
+    else {
+        fontcolor = defaultFontcolor
+    }
+
+    let tumor_copy_number_am_html = '<font color=' + fontcolor + '>' + row.tumor_copy_number_am + '</font>'
+
+    return tumor_copy_number_am_html
+}
+
+function kbFormatter(num) {
+    let kb_num
+    //let kb_num_with_comma
+    kb_num = Math.abs(num) > 999 ? 
+    Math.sign(num)*((Math.abs(num)/1000).toFixed(1))  : 
+    Math.sign(num)*Math.abs(num)
+    //kb_num_with_comma = numberWithCommas(kb_num)
+    return kb_num
+}
+
+function constructSegmentLengthInKb(seg_length_am) {
+    let seg_length_in_kb_am = 0
+
+    if (seg_length_am) {
+        seg_length_in_kb_am = kbFormatter(seg_length_am)
+    }
+    return seg_length_in_kb_am
+}
+
+
+
+// TDDO: plot and table use same data source
+function syncSegmentTableFromPlot() {
+  let tmpData = JSON.parse(JSON.stringify(gOriginalDataTableData));
+  let dataSrc = []
+  gwholegenomSegdata.forEach((curSegData)=>{
+    let original = tmpData.find(o=>o["DT_RowId"] == curSegData["DT_RowId"])
+    if (original === undefined) {      
+      console.log("add new segment")
+    } else {      
+        original['seg_chrom_nm'] = curSegData['segChrom'];
+        
+        original['cnv_call_type_nm'] = curSegData['callType'] == 'gain' ? 'Gain' :
+                                          curSegData['callType'] == 'loss' ? 'Loss' : curSegData['callType'];
+        original['tumor_copy_number_am'] = curSegData["numCopies"].toFixed(4);
+        original['seg_start_pos_num'] = curSegData['segL'];
+        original['seg_end_pos_num'] = curSegData['segR'];    
+                
+        // 
+        /* Segment Location*/
+        original.seg_genomic_pos_tx   = constructCNVSegmentGenomicPositionTxIgvLink(original, gPatientBamFile) 
+        /* Cytoband */
+        original.seg_cytoband_nm = `${whichBand(curSegData['segChrom'], curSegData['segL'])}-${whichBand(curSegData['segChrom'], curSegData['segR'])}` 
+        /* Call Type*/
+        original.cnv_call_type_nm_url_tx = original['cnv_call_type_nm']
+        /* CN */
+        original.color_tumor_copy_number_am = applyFontColorToTumorCopyNumber(original)
+        /* AI */
+        original.allele_balance_in_tumor_rt = curSegData['alleleRatio'];
+        /* KB */
+        original.seg_length_in_kb_am = constructSegmentLengthInKb(Number(curSegData['segR']) - Number(curSegData['segL']));
+        /* Genes(gene_in_seg_ct) TODO: load from backend */
+        /* Oncogenes(og_gene_list_tx) TODO: load from backend */
+        /* Tumor Suppressor Gene(tsg_gene_list_tx) TODO: load from backend */
+        /* CAV(cav_matching_list_tx) TODO: load from backend */
+        /* Notes(variant_curation_comment_url_tx) TODO: load from backend */
+        /* Clin Sig*/        
+        if (!original.variant_clinical_significance_nm) {
+          original.variant_clinical_significance_nm = 'Appendix only'
+        }
+        dataSrc.push(original)
+    }
+  })
+  redrawCnvTable(dataSrc)    
+}
+
+
+// TODO: registe on segment change event
+function updateSummaryTbl() {
+  // build segments
+  let segments = gwholegenomSegdata.map((d)=>{
+    return {
+      chr: d.segChrom,
+      start: Number(d.segL),
+      end: Number(d.segR),
+      size: Number(d.segR) - Number(d.segL),
+      state: d.callType,
+      aiState: aiState(d.alleleRatio),
+      startBand: whichBand(d.segChrom, Number(d.segL)),
+      endBand: whichBand(d.segChrom, Number(d.segR))
+    }
+  })
+
+  let intChr = (d)=>{
+    if (d == 'X') return 23;
+    if (d == 'Y') return 24;
+    return Number(d)
+  }
+
+  segments.sort((a, b)=>{
+    if (a.chr == b.chr) {
+      if (a.start < b.start) {return -1}
+      if (a.start > b.start) {return 1}
+      return 0
+    }
+    if (intChr(a.chr) < intChr(b.chr)) {return -1;}
+    return 1;
+    // if (intChr(a.chr) > intChr(b.chr)) {return 1;}
+  })
+  
+  let combinedSegments = combineSegments(segments)
+  
+  let lohSegments = []
+  segments.forEach((d)=>{
+    if (d.aiState == "LOH") {
+      lohSegments.push(d)
+    }
+  })
+
+  let outCombinedAiSegments = []
+  let combinedAiSegments = combineSegments(lohSegments, true)
+  combinedAiSegments.forEach((d)=>{
+    if (lohWithinLoss( d , combinedSegments , 1000000 ) == false) {
+      outCombinedAiSegments.push(d)
+    }
+  })
+  console.log(combinedSegments, outCombinedAiSegments)
+  displaySummaryTable(combinedSegments, outCombinedAiSegments)
+}
+
+
+<script>
+    //staticColors 
+   
+</script>
+<script>
+
+function displayViewerTitle() {
+    var tumorISM = gSampleSlotId['TUMOR-DNA'];
+    var normalISM = gSampleSlotId['NORMAL-DNA'];
+    $('#viewerTitle').text(`Tumor(${tumorISM}) vs. Normal(${normalISM})`);
+}
+
+function loadingAllData(range) {
+    drawRefSeq();
+    prepareProbePlotData();
+    drawTumorCN();
+    updateSummaryTbl();
+    syncSegmentTableFromPlot()
+    drawAlleleRatioPlot();
+    drawTumorBaf();
+    drawNormalBaf();
+    drawGistic();
+    drawGap();
+    renderChrsSplitLine();
+    drawSomatic();
+    drawGermline();
+    drawRnaData();
+    drawFusion();
+    updateRangeIdentifyPos(range);
+    updateChromRegion();
+    if (showChromonly) {
+        initZoomSlideBarByChromesome(defaultChromNum)
+    } else {
+        initZoomSlideBarByChromesome(-1);
+    }
+    traceLoc_new();
+}
+
+function displayChromOnly(startpos, endpos) {
+    LoadingBar("inline-block")
+    console.log("displayChromOnly", startpos, endpos);
+    layoutContainer();
+    d3.select("#cnv-svg-container").attr('opacity', 0.5);
+    updateDragHelper([startpos, endpos]);
+    gLayout.startPos = startpos;
+    gLayout.distance = endpos - startpos;
+    gLayout.xscale = d3.scaleLinear().range([0, gLayout.content]).domain([startpos, endpos]);
+    initZoomSlideBarByChromesome(defaultChromNum);
+    width = gLayout.content;
+    chrWidth = width;
+    drawXAxis();
+    disableAllMenuButton();
+
+    drawChromSomeV2();
+    drawRangeIdentify();
+
+    setTimeout(function() {
+
+        loadingAllData([startpos, endpos]);
+
+        initDropShadow();
+        gCnvsContainer.attr("x", dragHelper.leftXbPx);
+        enableAllMenuButton();
+        //disable loading circle
+        d3.select("#cnv-svg-container").attr('opacity', 1);
+        LoadingBar("none")
+    }, renderInterval);
+}
+
+function updateXAxis() {
+    d3.select("#x-axis").call(d3.axisTop(gLayout.xscale).ticks(10));
+}
+
+function drawXAxis() {
+    gOverlayContainer.append("g").attr("id", "x-axis").attr("transform", `translate(${gLayout.leftReserve}, 70)`)
+        .call(d3.axisTop(gLayout.xscale).ticks(10));
+}
+
+function LoadingBar(cssStyle) {
+    $("#data-loader-bar").css("display", cssStyle)
+}
+
+//wholegenome ∆
+function displayWholeGenome(startpos, endpos) {
+    layoutContainer();
+    LoadingBar("inline-block")
+    d3.select("#cnv-svg-container").attr('opacity', 0.5);
+    updateDragHelper([startpos, endpos]);
+    gLayout.startPos = startpos;
+    gLayout.distance = endpos - startpos;
+    gLayout.xscale = d3.scaleLinear().range([0, gLayout.content]).domain([startpos, endpos]);
+    initZoomSlideBarByChromesome(-1);
+    width = gLayout.content;
+    chrWidth = width;
+    drawXAxis();
+
+    renderChrsV1(null, wholeGenome["chr"], startpos, endpos);
+
+    setTimeout(function() {
+        renderChrsLabelsV1(null, wholeGenome["chr"], startpos, endpos);
+        drawRangeIdentify();
+
+        loadingAllData([startpos, endpos]);
+
+        initDropShadow();
+        gCnvsContainer.attr("x", dragHelper.leftXbPx);
+        d3.select("#cnv-svg-container").attr('opacity', 1);
+        LoadingBar("none");
+    }, renderInterval);
+}
+
+function hideEditorButton() {
+    $("#resetButton").hide();
+    $("#saveDbButton").hide();
+    $("#cnveditorButton").hide();
+    $("#cnvMergeButton").hide();
+    $("#undoButton").hide();
+    $("#redoButton").hide();
+    $("#cnvCorrectButton").hide();
+}
+
+function disableAllMenuButton() {
+    $("#goButton").addClass('disabled');
+    $("#gisticid").addClass('disabled');
+    $("#cnvCorrectButton").addClass('disabled');
+    $("#cnveditorButton").addClass('disabled');
+    $("#igvButton").addClass('disabled');
+    $("#resetButton").addClass('disabled');
+    $("#zoomInButton").addClass('disabled');
+    $("#zoomOutButton").addClass('disabled');
+    $("#refreshButton").addClass('disabled');
+    $("#saveScreenShot").addClass('disabled');
+    $("#layout-config").addClass('disabled');
+    $("#moveleft-prev").addClass('disabled');
+    $("#moveleft-half").addClass('disabled');
+    $("#moveleft-thr").addClass('disabled');
+    $("#moveright-thr").addClass('disabled');
+    $("#moveright-half").addClass('disabled');
+    $("#moveright-next").addClass('disabled');
+}
+
+function enableAllMenuButton() {
+    $("#saveScreenShot").removeClass('disabled');
+    $("#layout-config").removeClass('disabled');
+    $("#moveleft-prev").removeClass('disabled');
+    $("#moveleft-half").removeClass('disabled');
+    $("#moveleft-thr").removeClass('disabled');
+    $("#moveright-thr").removeClass('disabled');
+    $("#moveright-half").removeClass('disabled');
+    $("#moveright-next").removeClass('disabled');
+}
+
+function backupPlotData() {
+    gOriginalOncotreeNm = JSON.parse(JSON.stringify(gOncotreeNm));
+    gOriginalProbeBafData = JSON.parse(JSON.stringify(gprobeData));
+    gOriginalProbeCNofTumor = JSON.parse(JSON.stringify(gprobeCNofTumor));
+    gOriginalWholegenomSegdata = JSON.parse(JSON.stringify(gwholegenomSegdata));
+    gBackedWholegenomSegdata = JSON.parse(JSON.stringify(gwholegenomSegdata))
+    gOriginalGISTICData = JSON.parse(JSON.stringify(gGISTICData));
+    gOriginalCorrectionParas = JSON.parse(JSON.stringify(gCorrectionParas));
+    gBackedCorrectionParas = JSON.parse(JSON.stringify(gCorrectionParas));
+
+    gBakSvgContainerOrder = JSON.parse(JSON.stringify(gSvgContainerOrder));
+    gBakSvgContainerSpecs = JSON.parse(JSON.stringify(gSvgContainerSpecs));
+}
+
+</script>
+
+<script type="text/javascript" src="js/renderChrome.js?v=8"></script>
+<script>
+var cnvContainer;
+var ggapdata;
+var wholeGenome = {};
+wholeGenome["chr"] = [];
+var cnvSelections;
+var gwholegenomSegdata;
+let gNewWholegenomSegdata;
+var gOriginalDataTableData;
+var gapTypeData = {};
+var gStartPos;
+let gPatientBamFile = '';
+var gEndPos;
+var movestart;
+var moveend;
+var dragStart = -1;
+// var menu = contextMenu().items('zoom in', 'zoom out', 'refresh graph' , "IGV");
+var menu = contextMenu().items('zoom in');
+var brush, gBrush;
+const urlSearchParams = new URLSearchParams(window.location.search);
+const searchParams = Object.fromEntries(urlSearchParams.entries());
+let patient_id = urlSearchParams.get('patient_id');
+let case_id = urlSearchParams.get('case_id');
+const history = urlSearchParams.get('history');
+</script>
+<script type="text/javascript" src="js/mouseManager.js?v=1"></script>
+<script type="text/javascript" src="js/plotYaxisLabel.js?v=4"></script>
+<script type="text/javascript" src="js/attachTooltip.js?v=11"></script>
+<script type="text/javascript" src="js/plotRNAData.js?v=13"></script>
+<script type="text/javascript" src="js/plotSomaticGermline.js?v=14"></script>
+<script type="text/javascript" src="js/plotGap.js?v=8"></script>
+<script type="text/javascript" src="js/adjustLocation.js?v=9"></script>
+<script type="text/javascript" src="js/plotGisticData.js?v=12"></script>
+<script type="text/javascript" src="js/plotFusion.js?v=15"></script>
+<script type="text/javascript" src="js/plotCNV.js?v=18"></script>
+<script type="text/javascript" src="js/util.js?v=11"></script>
+<script type="text/javascript" src="js/plotRefSeq.js?v=3"></script>
+
+
+<script>
+  
+// for mock stub
+patient_id = 'LP1999'
+case_id = '411526'
+// 
+// if (patient_id == null || case_id == null) {
+// 	alert('invalid url, need patient_id and case_id\n' + 
+// 		  'please change your url to \n/wholegenome.html?patient_id=xxx&case_id=xxx\n' +
+// 		  'you need specify xxx to a valid id.');
+// 	throw new Error('invalid input');
+// }
+// renderTable()
+var beginTs = Date.now();
+
+function parserCytoBandData(cytoBandData) {
+    gcytoBandData = cytoBandData;
+    cytoBandData.forEach(function(d) {
+        //conver tsv file to object
+        var stain = d.stain;
+        if (d.density != "") stain += d.density;
+        var obj = {
+            chr: d.chromosome,
+            bp: {
+                start: parseInt(d.bp_start, 10),
+                stop: parseInt(d.bp_stop, 10)
+            },
+            px: {
+                start: -1,
+                stop: -1,
+                width: -1
+            },
+            name: d.arm + d.band,
+            arm: d.arm,
+            stain: stain,
+            taxid: 9606
+        };
+        if (d.chromosome in chrBands === false) chrBands[d.chromosome] = [];
+        chrBands[d.chromosome].push(obj);
+    });
+}
+if (history != null) {
+    hideEditorButton();
+}
+
+d3.json(`getRefSeq.php?`).then((refseq) => {
+    gRefSeqData = refseq
+})
+
+renderTable([]);
+
+Promise.all([
+    // d3.json(`getProbeSegData.php?job_type=probeData&patient_id=${patient_id}&case_id=${case_id}`),
+    // d3.json(`getRefSeq.php?`),
+    d3.json(`CnvCorrection.php?patient_id=${patient_id}&case_id=${case_id}&history=${history}`),
+    // d3.json(`getCnvSegment.php?patient_id=${patient_id}&case_id=${case_id}&history=${history}`),
+    // d3.json(`getProbeSegData.php?job_type=probeDataLoc&cnSample=${gProbeCnSample}&bafSample=${gProbeBafSample}&patient_id=${patient_id}&case_id=${case_id}`),
+    // d3.json(`getProbeSegData.php?job_type=probeDataCN&cnSample=${gProbeCnSample}&bafSample=${gProbeBafSample}&patient_id=${patient_id}&case_id=${case_id}`),	
+    d3.tsv("cytoband_data_new.tsv").then(function(cytoBandData) {
+        parserCytoBandData(cytoBandData);
+    }),
+    // d3.json(`getProbeSegData.php?job_type=segData&patient_id=${patient_id}&case_id=${case_id}`),	
+    d3.tsv("gapAndMasked.2020_03_07.tsv"),
+    d3.json(`getAnnationData.php?patient_id=${patient_id}&case_id=${case_id}`),
+    d3.json(`getSomaticGermlineRnaFusionData.php?patient_id=${patient_id}&case_id=${case_id}`),
+    d3.json(`getOncotreeNm.php?patient_id=${patient_id}&case_id=${case_id}`).then(function(oncotreeNm) {
+        gOncotreeNm = oncotreeNm;
+        var gisticFileName = "GISTIC/" + gOncotreeNm + "-GISTIC-combined.seg";
+        return d3.tsv(gisticFileName)
+    }),
+    d3.json(`CnvPlotConfig.php?user=jinmou`),
+    d3.json(`CnvCurateHistory.php?patient_id=${patient_id}&case_id=${case_id}`)
+]).then(([cnvCorrectionData, /*dtSegData, gatk4Data, cnv, */ cytoBandData, /*wholegenomSegdata,*/ gapData, annationData, somaticGermlineRnaFusionData,
+    GISTICData, cnvConfig, curatorHistory
+]) => {
+    if (curatorHistory.length > 1) {
+        $("#historyButton").text("History*")
+    }
+    gPatientBamFile = ''; //dtSegData['bam'];
+    // renderTable([dtSegData["data"]]);
+
+    // gRefSeqData = refseq;
+    // gSampleSlotId = gatk4Data["sampleSlotId"];
+    gSampleSlotId = {
+        "NORMAL-DNA": "ISM556588-2",
+        "TUMOR-DNA": "ISM556060-2",
+        "TUMOR-RNA": "ISM555034-2"
+    }
+    if (gSampleSlotId['TUMOR-DNA'] == undefined) {
+        alert("Didn't find a valid sample, please check patient_id and case_id");
+        return false;
+    }
+    $("#gisticid").val(gOncotreeNm);
+    setCnvConfig(cnvConfig);
+    console.log(cnvCorrectionData)
+    composeProbeDataArray({
+        bafC: [],
+        bafD: [],
+        bafN: [],
+        bafS: [],
+        bafT: [],
+        cnC: [],
+        cnD: [],
+        cnS: []
+    }, {
+        cnV: []
+    });
+    // composeProbeDataArray(gatk4Data, cnv);
+    var fetchDataTs = Date.now();
+    console.log("fetch data: " + String(fetchDataTs - beginTs));
+    gGISTICData = GISTICData;
+    ggapdata = gapData;
+    // gNewWholegenomSegdata = JSON.parse(JSON.stringify(dtSegData["data"]));
+    // gOriginalDataTableData = JSON.parse(JSON.stringify(dtSegData["data"]));
+    gNewWholegenomSegdata = []
+    gOriginalDataTableData = []
+    // gwholegenomSegdata = wholegenomSegdata;  
+    // ggermlineData = somaticGermlineRnaFusionData['germline'];
+    // gfusionData = somaticGermlineRnaFusionData['fusion'];
+    // grnaData = somaticGermlineRnaFusionData['rna'];
+    // gsomaticData = somaticGermlineRnaFusionData['somatic'];
+    ggermlineData = [];
+    gfusionData = [];
+    grnaData = [];
+    gsomaticData = [];
+    var url = window.location.href;
+    url = new URL(url);
+    var chrompara = url.searchParams.get("chrom");
+    if (chrompara != null) {
+        defaultChromNum = chrompara;
+        showChromonly = true;
+    } else showChromonly = false;
+    // not draw
+    constructWholegenomePixel();
+    gprobeData = gProbeBafData;
+    gprobeCNofTumor = gProbeCNData;
+    // gprobeData = gatk4Data["BAF"];;
+    // gprobeCNofTumor = gatk4Data["copyNum"];
+    ajustCNVLocation();
+    constructGapData();
+    allGenes = groupBySubArm(annationData, "geneCytoband", "geneId", "segChrom");
+    allChrs = groupBy(annationData, "segChrom");
+    uniqueSegment = getAllSegmentByChr(annationData);
+    initTooltip("tooltip", "tooltip");
+    initTooltip("cnvtooltip", "cnvtooltip");
+    initTooltip("triangletooltip", "triangletooltip");
+
+    if (cnvCorrectionData.length != 0) {
+        correctProbedata(cnvCorrectionData[0]);
+    } else {
+        // use the init value
+    }
+
+    // backup original data
+    backupPlotData();
+
+    var loadedDataTs = Date.now();
+    console.log("load data: " + String(loadedDataTs - fetchDataTs));
+    /////////////
+    // displayViewerTitle();
+    showChromonly = true;
+    defaultChromNum = '19';
+    showChromonly = false;
+    defaultChromNum = '-1';
+    if (!showChromonly) {
+        displayWholeGenome(wholeGenome["start"], wholeGenome["start"] + wholeGenome["totalLenth"]);
+    } else {
+        var chrStartEnd = getChromLength(defaultChromNum);
+        // displayChromOnly( parseInt(chrStartEnd[0]), parseInt(chrStartEnd[1]));
+        displayChromOnly(39374991, 40423567);
+    }
+    enableAllMenuButton();
+    var renderedPlotTs = Date.now();
+    console.log("render : " + String(renderedPlotTs - loadedDataTs));
+});
+
+</script>
+</body>
+
+ 
