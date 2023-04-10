@@ -1,4 +1,4 @@
-# CNEAL
+# CNAEL
 CNAEL statistical analysis
 
 This repository is a project to provide R script to facilitate CNAEL (CAN 
