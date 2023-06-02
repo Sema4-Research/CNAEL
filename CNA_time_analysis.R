@@ -1,5 +1,5 @@
 # load data 
-curation_time<- read.csv(file = '~/Library/Mobile Documents/com~apple~CloudDocs/Ellen_Stuff/sema4/timeinput.csv')
+curation_time<- read.csv(file = 'timeinput.csv')
 #########################################################################
 # 1. test of normality. R's default is the Shapiro-Wilk Test
 #########################################################################
@@ -28,9 +28,7 @@ wilcox.test(time ~ group, data = curation_time,exact = FALSE,alternative = "two.
 library(vioplot)
 x1 <- sbs_time$time
 x2 <- cnael_time$time
-vioplot(x1, x2, names=c("sbs", "cnael"),
-        col="gold")
-title("Violin Plots: Mins of CNA Review")
-
-
-
+vioplot(x1, x2, ylab="Review time (mins)", col="#FF6699", yaxt = "n", axes = TRUE)
+axis(1,at=1:2,labels=c("Existing Lab Protocol","CNAEL/SOP"))
+axis(2, at=seq(0, 400, by=60))
+title("Violin Plots: Mins for CNA Review")
